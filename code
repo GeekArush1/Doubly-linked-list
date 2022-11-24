@@ -1,0 +1,101 @@
+#include <iostream>
+using namespace std;
+struct node{
+    int info;
+    struct node *forw;
+    struct node *back;
+};
+typedef struct node node;
+void display_doubly_linked_list(int n, node *start){
+    node *temp=start;
+    for(int i=0;i<n;i++){
+        cout<<temp->info<<endl;
+        temp=temp->forw;
+    }
+}
+node *search_loc(node *start, node *last, int value){
+    node *save=start;
+    node *loc=NULL;
+    node *ptr=start->forw;
+    if(start==NULL){
+        loc=NULL;
+        return loc;
+    }
+    else if(value<start->info){
+        loc=NULL;
+        return loc;
+    }
+    else{
+        while(ptr!=NULL){
+            if(value<ptr->info){
+                loc=save;
+                return loc;
+            }
+            else{
+                save=ptr;
+                ptr=ptr->forw;
+            }
+        }
+        return save;
+    }
+}
+node *insertion(node *start, node *last, node *loc, int value){
+    node *p=(node *)malloc(sizeof(node));
+    p->info=value;
+    p->forw=NULL;
+    p->back=NULL;
+    if(start==NULL){
+        start=last=p;
+        return start;
+    }
+    if(loc==NULL){
+        p->forw=start;
+        start->back=p;
+        start=p;
+        return start;
+    }
+    else if(loc==last){
+        p->back=last;
+        last->forw=p;
+        last=p;
+        return start;
+    }
+    else{
+        node *tell;
+        loc->forw=tell;
+        p->forw=tell;
+        tell->back=p;
+        loc->forw=p;
+        p->back=loc;
+        return start;
+    }
+}
+int main() {
+    int n, value;
+    cout << "Enter number of elements to be added in linked list" << endl;
+    cin >> n;
+    node *temp = NULL;
+    node *newelement, *start, *loc;
+    for (int i = 0; i < n; i++) {
+        newelement = (node *) malloc(sizeof(node));
+        cout << "Enter " << i + 1 << "element of the doubly linked list" << endl;
+        cin >> newelement->info;
+        newelement->forw = NULL;
+        newelement->back = NULL;
+        if (temp == NULL) {
+            start = temp = newelement;
+        } else {
+            temp->forw = newelement;
+            newelement->back = temp;
+            temp = newelement;
+        }
+    }
+    display_doubly_linked_list(n, start);
+    cout<<"Enter value to be inserted: "<<endl;
+    cin>>value;
+    loc= search_loc(start, temp, value);
+    start= insertion(start,temp,loc,value);
+    display_doubly_linked_list(n+1,start);
+    return 0;
+}
+
